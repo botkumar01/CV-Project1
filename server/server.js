@@ -6,10 +6,11 @@ const socket = require('socket.io');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DB_URL = process.env.DB_URL;
 
-// Update CORS settings to allow requests from your frontend deployed on Vercel
+// Enable CORS for your frontend
 app.use(cors({
-  origin: 'https://cv-project1-6ypa.vercel.app',  // Your frontend URL
+  origin: 'https://cv-project1-6ypa.vercel.app', // Your frontend URL
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -19,10 +20,10 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// SOCKET.IO INTEGRATION
+// Socket.IO Setup
 const io = socket(server, {
   cors: {
-    origin: 'https://cv-project1-6ypa.vercel.app', // Update origin to frontend URL
+    origin: 'https://cv-project1-6ypa.vercel.app',  // Your frontend URL
     methods: ['GET', 'POST'],
   },
 });
@@ -30,14 +31,15 @@ const io = socket(server, {
 global.onlineUsers = new Map();
 
 io.on('connection', (socket) => {
+  console.log('A user connected');
   global.chatSocket = socket;
 
   socket.on('add-user', (userId) => {
-    onlineUsers.set(userId, socket.id);
+    global.onlineUsers.set(userId, socket.id);
   });
 
   socket.on('send-msg', async (data) => {
-    const sendUserSocket = await onlineUsers.get(data.to);
+    const sendUserSocket = await global.onlineUsers.get(data.to);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit('msg-recieve', data.message);
     }
@@ -45,13 +47,9 @@ io.on('connection', (socket) => {
 });
 
 // Database connection
-mongoose.connect("mongodb+srv://harish:hamarihk@cluster0.zmgaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-  .then(() => {
-    console.log("Connected to the database");
-  })
-  .catch((err) => {
-    console.error("Database connection failed", err);
-  });
+mongoose.connect(DB_URL).then(() => {
+  console.log("Connected to the database");
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
