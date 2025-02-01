@@ -21,7 +21,7 @@ function App() {
     if (User) {
       const socketURL = window.location.hostname === 'localhost' 
         ? 'http://localhost:3500' 
-        : 'https://cv-project1-6ypa.vercel.app';  // Change to your production backend URL
+        : 'https://cv-project1-backend.vercel.app/';  // Change to your production backend URL
 
       socket.current = io(socketURL);
       socket.current.emit("add-user", User._id);
