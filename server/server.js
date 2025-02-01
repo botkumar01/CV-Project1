@@ -5,7 +5,7 @@ require('dotenv').config();
 const socket = require('socket.io');
 
 const app = express();
-const PORT = process.env.PORT || 3400;
+const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 app.use(cors());
 
@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
 
 //database connection
 
-mongoose.connect(DB_URL).then(()=>{
+mongoose.connect("mongodb+srv://harish:hamarihk@cluster0.zmgaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{
     console.log("connected to the database");
 })
 

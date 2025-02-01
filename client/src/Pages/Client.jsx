@@ -28,7 +28,7 @@ const Client = ({setUser,setChat}) => {
       socket.current.emit("add-user",currentUser._id)
     }
   },[currentUser])
-
+  
   useEffect(() => {
     const fetch = async () => {
       let user = JSON.parse(localStorage.getItem('Mental-App'));
