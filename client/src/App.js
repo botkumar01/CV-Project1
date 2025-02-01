@@ -19,7 +19,7 @@ function App() {
 
   useEffect(()=>{
     if(User){
-      socket.current = io("http://localhost:3500")
+      socket.current = io("cv-project1-6ypa.vercel.app")
       socket.current.emit("add-user",User._id)
     }
   },[User])
