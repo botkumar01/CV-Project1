@@ -8,12 +8,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 
-// CORS configuration
+// Update the frontend URL (new URL)
+const frontendUrl = 'https://cv-project1.vercel.app';  // Replace with your frontend URL
+
+// Use CORS middleware and specify which domains are allowed to access the backend
 app.use(cors({
-  origin: 'https://cv-project1.vercel.app', // Replace this with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow the methods you're using
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow the headers you're sending
-  credentials: true, // Allow cookies or auth headers if necessary
+  origin: frontendUrl,  // Allow the frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow these methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow these headers
+  credentials: true,  // Allow cookies to be sent
 }));
 
 // Server connection
@@ -21,10 +24,10 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Socket.IO Setup
+// Socket.io integration
 const io = socket(server, {
   cors: {
-    origin: 'https://cv-project1.vercel.app', // Your frontend URL
+    origin: frontendUrl,  // Allow the frontend URL
     methods: ['GET', 'POST'],
   },
 });
@@ -32,15 +35,14 @@ const io = socket(server, {
 global.onlineUsers = new Map();
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
   global.chatSocket = socket;
 
   socket.on('add-user', (userId) => {
-    global.onlineUsers.set(userId, socket.id);
+    onlineUsers.set(userId, socket.id);
   });
 
   socket.on('send-msg', async (data) => {
-    const sendUserSocket = await global.onlineUsers.get(data.to);
+    const sendUserSocket = await onlineUsers.get(data.to);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit('msg-recieve', data.message);
     }
@@ -52,6 +54,7 @@ mongoose.connect(DB_URL).then(() => {
   console.log("Connected to the database");
 });
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/auth', require('./ROUTES/authRoute'));
