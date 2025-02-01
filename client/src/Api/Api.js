@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL:"http://localhost:3500"
+    baseURL:"https://cv-project1-6ypa.vercel.app/"
 })
