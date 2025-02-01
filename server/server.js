@@ -8,11 +8,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 
-// Enable CORS for your frontend
+// CORS configuration
 app.use(cors({
-  origin: 'https://cv-project1-6ypa.vercel.app', // Your frontend URL
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: 'https://cv-project1.vercel.app', // Replace this with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow the methods you're using
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow the headers you're sending
+  credentials: true, // Allow cookies or auth headers if necessary
 }));
 
 // Server connection
@@ -23,7 +24,7 @@ const server = app.listen(PORT, () => {
 // Socket.IO Setup
 const io = socket(server, {
   cors: {
-    origin: 'https://cv-project1-6ypa.vercel.app',  // Your frontend URL
+    origin: 'https://cv-project1.vercel.app', // Your frontend URL
     methods: ['GET', 'POST'],
   },
 });
