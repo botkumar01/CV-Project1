@@ -9,15 +9,23 @@ const PORT = process.env.PORT || 3000;
 const DB_URL = process.env.DB_URL;
 
 // Update the frontend URL (new URL)
-const frontendUrl = 'https://cv-project1.vercel.app';  // Replace with your frontend URL
+const cors = require('cors');
 
-// Use CORS middleware and specify which domains are allowed to access the backend
+// Define allowed origins
+const allowedOrigins = [
+  'https://cv-project1.vercel.app', // Frontend URL
+];
+
+// Enable CORS with OPTIONS handling
 app.use(cors({
-  origin: frontendUrl,  // Allow the frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow these headers
-  credentials: true,  // Allow cookies to be sent
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow necessary methods
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Handle OPTIONS preflight request explicitly if needed
+app.options('*', cors());
+
 
 // Server connection
 const server = app.listen(PORT, () => {
@@ -50,7 +58,7 @@ io.on('connection', (socket) => {
 });
 
 // Database connection
-mongoose.connect(DB_URL).then(() => {
+mongoose.connect("mongodb+srv://harish:hamarihk@cluster0.zmgaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(() => {
   console.log("Connected to the database");
 });
 
