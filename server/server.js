@@ -6,7 +6,6 @@ const socket = require('socket.io');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_URL = process.env.DB_URL;
 
 // Update CORS settings to allow requests from your frontend deployed on Vercel
 app.use(cors({
