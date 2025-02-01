@@ -12,15 +12,21 @@ const DB_URL = process.env.DB_URL;
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'https://cv-project1.vercel.app', // Allow requests from your frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all necessary methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
     credentials: true, // Allow cookies and credentials (if needed)
   })
 );
+
+// Handle preflight requests
+app.options('*', cors()); // Allow preflight requests for all routes
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Database Connection
 mongoose
-  .connect("mongodb+srv://harish:hamarihk@cluster0.zmgaj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+  .connect(DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
